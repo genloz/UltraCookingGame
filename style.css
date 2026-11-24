@@ -8,6 +8,14 @@
 
 body { margin: 0; }
 [hidden] { display: none !important; }
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 
 header {
   padding: 2rem max(1rem, calc((100% - 58rem) / 2));
@@ -17,6 +25,7 @@ header {
 
 header p, h1, h2, h3 { margin: 0 0 .5rem; }
 h1 { font-size: clamp(2rem, 7vw, 3.6rem); line-height: 1.1; }
+h1, #verdict { overflow-wrap: anywhere; }
 .eyebrow { text-transform: uppercase; letter-spacing: .1em; font-size: .8rem; font-weight: 700; }
 main { max-width: 58rem; margin: 1.5rem auto; padding: 0 1rem; }
 

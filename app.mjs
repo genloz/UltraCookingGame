@@ -72,7 +72,8 @@ function begin() {
   $('name-field').hidden = mode !== 'creative';
   $('kitchen-label').textContent = `${world.icon} ${world.name} · ${modes[mode].name}`;
   $('dish').textContent = recipe?.name ?? 'Invent a recipe';
-  $('clock').hidden = $('rival').hidden = mode !== 'battle';
+  $('clock').hidden = $('time-warning').hidden = $('rival').hidden = mode !== 'battle';
+  $('time-warning').textContent = '';
   renderRound();
   $('dish').focus();
   if (mode === 'battle') {
@@ -125,7 +126,11 @@ function elapsedSeconds() {
 function tick() {
   const elapsed = elapsedSeconds();
   const { limitSeconds, rivalSeconds } = battleRules;
-  $('clock').textContent = `${Math.max(0, Math.ceil(limitSeconds - elapsed))} seconds left`;
+  const remaining = Math.max(0, Math.ceil(limitSeconds - elapsed));
+  $('clock').textContent = `${remaining} seconds left`;
+  const warning = remaining <= 10 ? '10 seconds or less left to serve.' :
+    remaining <= 30 ? '30 seconds or less left to serve.' : '';
+  if ($('time-warning').textContent !== warning) $('time-warning').textContent = warning;
   const total = round.recipe.steps.length;
   const cooked = rivalMovesAt(round.recipe, elapsed).length;
   const progress = elapsed >= rivalSeconds ? 'Chef Pepper has served!' : `Chef Pepper: ${cooked}/${total} steps cooked`;
@@ -152,8 +157,9 @@ function finish(elapsed, timedOut = false) {
       const rivalScore = judgeRecipe(recipe, rivalMovesAt(recipe, rivalSeconds)).score;
       $('verdict').textContent = battleOutcome(score, elapsed, rivalScore);
       notes.unshift(`Judge’s scores: you ${score}/100 in ${elapsed.toFixed(2)}s; Chef Pepper ${rivalScore}/100 in ${rivalSeconds}s.`);
-      if (timedOut) notes.unshift('Time is up! The judge scored the steps you completed.');
+      if (timedOut) notes.unshift('You didn’t serve in time. The judge still scored the steps you completed.');
       $('clock').textContent = 'Battle complete';
+      $('time-warning').textContent = '';
       $('rival').textContent = '';
     } else {
       $('verdict').textContent = `Judge’s score: ${score}/100`;

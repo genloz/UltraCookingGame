@@ -55,7 +55,8 @@ test('battle is opt-in for older players and only breaks quality ties with time'
   assert.equal(rivalMovesAt(recipe, rivalSeconds / 3).length, 1);
   const rivalScore = judgeRecipe(recipe, rivalMovesAt(recipe, rivalSeconds)).score;
   assert.equal(rivalScore, 89);
-  assert.equal(battleOutcome(rivalScore + 1, limitSeconds, rivalScore), 'You win!');
+  assert.equal(battleOutcome(rivalScore + 1, limitSeconds - 1, rivalScore), 'You win!');
+  assert.equal(battleOutcome(100, limitSeconds, rivalScore), 'Time is up — Chef Pepper wins!');
   assert.equal(battleOutcome(rivalScore - 1, 1, rivalScore), 'Chef Pepper wins!');
   assert.equal(battleOutcome(rivalScore, rivalSeconds - 1, rivalScore), 'You win on speed!');
   assert.equal(battleOutcome(rivalScore, rivalSeconds, rivalScore), 'It’s a tie!');

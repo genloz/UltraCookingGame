@@ -6,7 +6,7 @@ export const modes = {
   medium: { name: 'Medium', description: 'See the steps, but work out the timings yourself.' },
   hard: { name: 'Hard', description: 'Only the ingredients are shown. You choose the order, methods, and timings.' },
   creative: { name: 'Creative', description: 'Invent a dish from the world’s pantry and serve it to three judges.' },
-  battle: { name: 'Battle · 13+', description: 'Race Chef Pepper to cook the same recipe. Quality wins; speed breaks a tie.' },
+  battle: { name: 'Battle · 13+', description: 'Race Chef Pepper to cook the same recipe. Serve within 90 seconds. Quality wins; speed breaks a tie.' },
 };
 
 export const battleRules = { minimumAge: 13, rivalSeconds: 45, limitSeconds: 90 };
@@ -74,6 +74,7 @@ export function rivalMovesAt(recipe, elapsedSeconds) {
 }
 
 export function battleOutcome(playerScore, elapsedSeconds, rivalScore) {
+  if (elapsedSeconds >= battleRules.limitSeconds) return 'Time is up — Chef Pepper wins!';
   if (playerScore !== rivalScore) return playerScore > rivalScore ? 'You win!' : 'Chef Pepper wins!';
   if (elapsedSeconds === battleRules.rivalSeconds) return 'It’s a tie!';
   return elapsedSeconds < battleRules.rivalSeconds ? 'You win on speed!' : 'Chef Pepper wins on speed!';
