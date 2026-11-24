@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UltraCookingGame</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='50' font-size='50'%3E🍳%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <header>
+    <p class="eyebrow">The virtual cooking club</p>
+    <h1>UltraCookingGame</h1>
+    <p>Explore new kitchens, learn cooking techniques, and see what the judges think.</p>
+  </header>
+  <main>
+    <section id="setup" class="panel" aria-labelledby="setup-title">
+      <h2 id="setup-title" tabindex="-1">Set up your kitchen</h2>
+      <form id="setup-form">
+        <div class="fields">
+          <label>World <select id="world" aria-describedby="world-description"></select></label>
+          <label>Mode <select id="mode" aria-describedby="mode-description"></select></label>
+          <label id="recipe-field">Recipe <select id="recipe"></select></label>
+        </div>
+        <p id="world-description"></p>
+        <p id="mode-description"></p>
+        <label id="battle-gate" hidden>
+          <input id="age-confirmation" type="checkbox"> I’m 13 or older.
+        </label>
+        <button id="start" type="submit">Enter kitchen</button>
+      </form>
+    </section>
+
+    <section id="kitchen" class="panel" aria-labelledby="dish" hidden>
+      <p id="kitchen-label" class="eyebrow"></p>
+      <h2 id="dish" tabindex="-1"></h2>
+      <p id="clock"></p>
+      <p id="rival" role="status"></p>
+      <div class="kitchen-grid">
+        <div>
+          <h3 id="guide-title"></h3>
+          <p id="guide-note"></p>
+          <ol id="guide"></ol>
+          <button id="hint" type="button" hidden>Show next hint</button>
+          <p id="hint-text" role="status"></p>
+          <details>
+            <summary>Cooking glossary</summary>
+            <dl id="glossary"></dl>
+          </details>
+        </div>
+        <div>
+          <form id="cook-form">
+            <h3>Cooking station</h3>
+            <div class="fields">
+              <label>Ingredient <select id="ingredient" required></select></label>
+              <label>Method <select id="action" required></select></label>
+              <label>Game minutes <input id="minutes" type="number" min="1" max="60" required></label>
+            </div>
+            <button type="submit">Cook step</button>
+          </form>
+          <p id="feedback" role="status"></p>
+          <h3>Your cooking log</h3>
+          <p id="empty-log">No steps yet.</p>
+          <ol id="log"></ol>
+          <button id="undo" type="button">Undo last step</button>
+          <form id="serve-form">
+            <label id="name-field" hidden>Dish name <input id="dish-name" maxlength="60" placeholder="Untitled creation"></label>
+            <button id="serve" type="submit">Serve dish</button>
+          </form>
+        </div>
+      </div>
+      <section id="result" aria-labelledby="verdict" hidden>
+        <h3 id="verdict" tabindex="-1"></h3>
+        <ul id="details"></ul>
+      </section>
+      <div class="navigation">
+        <button id="back" type="button">Back to setup</button>
+        <button id="retry" type="button" hidden>Play again</button>
+      </div>
+    </section>
+    <p class="disclaimer">This is a simulation. Game minutes are not real cooking times. In a real kitchen, follow a trusted recipe and get adult help with heat and sharp tools.</p>
+  </main>
+</body>
+</html>

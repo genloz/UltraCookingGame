@@ -9,7 +9,7 @@ export const modes = {
   battle: { name: 'Battle · 13+', description: 'Race Chef Pepper to cook the same recipe. Quality wins; speed breaks a tie.' },
 };
 
-export const battleRules = { minimumAge: 13, rivalSeconds: 45, limitSeconds: 90, rivalScore: 89 };
+export const battleRules = { minimumAge: 13, rivalSeconds: 45, limitSeconds: 90 };
 export const canBattle = (age) => Number.isInteger(age) && age >= battleRules.minimumAge;
 
 export function pantryFor(world) {
@@ -66,8 +66,15 @@ export function judgeCreative(moves) {
   return { yummy: panel.filter(({ liked }) => liked).length >= 2, panel };
 }
 
-export function battleOutcome(playerScore, elapsedSeconds) {
-  if (playerScore !== battleRules.rivalScore) return playerScore > battleRules.rivalScore ? 'You win!' : 'Chef Pepper wins!';
+export function rivalMovesAt(recipe, elapsedSeconds) {
+  const count = Math.min(recipe.steps.length, Math.floor(elapsedSeconds * recipe.steps.length / battleRules.rivalSeconds));
+  return recipe.steps.slice(0, count).map((step, index) =>
+    index === recipe.steps.length - 1 ? { ...step, minutes: step.minutes + 1 } : step,
+  );
+}
+
+export function battleOutcome(playerScore, elapsedSeconds, rivalScore) {
+  if (playerScore !== rivalScore) return playerScore > rivalScore ? 'You win!' : 'Chef Pepper wins!';
   if (elapsedSeconds === battleRules.rivalSeconds) return 'It’s a tie!';
   return elapsedSeconds < battleRules.rivalSeconds ? 'You win on speed!' : 'Chef Pepper wins on speed!';
 }

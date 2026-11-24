@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { worlds, actions } from './recipes.mjs';
-import { battleOutcome, battleRules, canBattle, checkStep, instructionsFor, judgeCreative, judgeRecipe, pantryFor } from './game.mjs';
+import { battleOutcome, battleRules, canBattle, checkStep, instructionsFor, judgeCreative, judgeRecipe, pantryFor, rivalMovesAt } from './game.mjs';
 
 const recipe = worlds[0].recipes[0];
 
@@ -50,10 +50,14 @@ test('creative judging explains a successful dish and gives feedback on a poor o
 test('battle is opt-in for older players and only breaks quality ties with time', () => {
   for (const age of [undefined, 12, 12.9, '13']) assert.equal(canBattle(age), false);
   assert.equal(canBattle(13), true);
-  const { rivalScore, rivalSeconds, limitSeconds } = battleRules;
-  assert.equal(battleOutcome(rivalScore + 1, limitSeconds), 'You win!');
-  assert.equal(battleOutcome(rivalScore - 1, 1), 'Chef Pepper wins!');
-  assert.equal(battleOutcome(rivalScore, rivalSeconds - 1), 'You win on speed!');
-  assert.equal(battleOutcome(rivalScore, rivalSeconds), 'It’s a tie!');
-  assert.equal(battleOutcome(rivalScore, rivalSeconds + 1), 'Chef Pepper wins on speed!');
+  const { rivalSeconds, limitSeconds } = battleRules;
+  assert.equal(rivalMovesAt(recipe, 0).length, 0);
+  assert.equal(rivalMovesAt(recipe, rivalSeconds / 3).length, 1);
+  const rivalScore = judgeRecipe(recipe, rivalMovesAt(recipe, rivalSeconds)).score;
+  assert.equal(rivalScore, 89);
+  assert.equal(battleOutcome(rivalScore + 1, limitSeconds, rivalScore), 'You win!');
+  assert.equal(battleOutcome(rivalScore - 1, 1, rivalScore), 'Chef Pepper wins!');
+  assert.equal(battleOutcome(rivalScore, rivalSeconds - 1, rivalScore), 'You win on speed!');
+  assert.equal(battleOutcome(rivalScore, rivalSeconds, rivalScore), 'It’s a tie!');
+  assert.equal(battleOutcome(rivalScore, rivalSeconds + 1, rivalScore), 'Chef Pepper wins on speed!');
 });
